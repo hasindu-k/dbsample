@@ -1,11 +1,12 @@
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.Properties;
 
 @WebServlet(name = "Search", urlPatterns = {"/search"})
 public class Search extends HttpServlet {
@@ -31,11 +32,11 @@ public class Search extends HttpServlet {
             String product_name = request.getParameter("product_name");
 
             try {
-                Class.forName("com.mysql.jdbc.Driver");
-
-                String dbUrl = System.getenv("DB_URL");
-                String dbUser = System.getenv("DB_USER");
-                String dbPassword = System.getenv("DB_PASSWORD");
+                Properties props = new Properties();
+                props.load(getClass().getClassLoader().getResourceAsStream("db.properties"));
+                String dbUrl = props.getProperty("db.url");
+                String dbUser = props.getProperty("db.user");
+                String dbPassword = props.getProperty("db.password");
 
                 if (dbUrl == null || dbUser == null || dbPassword == null) {
                     throw new ServletException("Database configuration not found");
