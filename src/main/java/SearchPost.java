@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.Properties;
 
 @WebServlet(name = "SearchPost", urlPatterns = {"/searchpost"})
 public class SearchPost extends HttpServlet {
@@ -24,7 +23,7 @@ public class SearchPost extends HttpServlet {
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
@@ -32,18 +31,7 @@ public class SearchPost extends HttpServlet {
             String product_name = request.getParameter("product_name");
 
             try {
-                Properties props = new Properties();
-                props.load(getClass().getClassLoader().getResourceAsStream("db.properties"));
-                String dbUrl = props.getProperty("db.url");
-                String dbUser = props.getProperty("db.user");
-                String dbPassword = props.getProperty("db.password");
-
-
-                if (dbUrl == null || dbUser == null || dbPassword == null) {
-                    throw new ServletException("Database configuration not found");
-                }
-
-                Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+                Connection conn = DBConnection.getConnection();
 
                 String sql = "SELECT product_name, product_price FROM products WHERE product_name= ?";
 
