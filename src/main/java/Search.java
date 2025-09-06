@@ -36,7 +36,7 @@ public class Search extends HttpServlet {
 
                 try (PreparedStatement pst = conn.prepareStatement(sql)) {
                     pst.setString(1, product_name);
-                    ResultSet rs = pst.executeQuery(sql);
+                    ResultSet rs = pst.executeQuery();
 
                     while (rs.next()) {
                         String prod_name = rs.getString("product_name");
